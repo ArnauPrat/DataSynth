@@ -1,8 +1,8 @@
 package org.dama.datasynth.runtime.operators
 
-import org.apache.spark.sql.{Dataset, Encoder}
+import org.apache.spark.sql.{Dataset, Encoder, SparkSession}
 import org.dama.datasynth.common.PropertyGenerator
-import org.dama.datasynth.executionplan.ExecutionPlan.{PropertyTable}
+import org.dama.datasynth.executionplan.ExecutionPlan.PropertyTable
 import org.dama.datasynth.runtime.SparkRuntime
 import org.dama.datasynth.runtime.utils.RndGenerator
 
@@ -21,7 +21,7 @@ object PropertyTableOperator {
   def boolean(node : PropertyTable[Boolean] ) : Dataset[(Long,Boolean)] = {
     val generator: PropertyGenerator[Boolean] = InstantiatePropertyGeneratorOperator[Boolean](node.generator)
     val size : Long = EvalValueOperator(node.size).asInstanceOf[Long]
-    val rnd = RndGenerator (0)
+    val rnd = FetchRndGenerator.execute(node.name);
     SparkRuntime.spark.range (0, size).map (i => Tuple2[Long,Boolean](i.toLong, generator.run (i, rnd.random (i) ) ) )
   }
 
@@ -33,7 +33,7 @@ object PropertyTableOperator {
   def int(node : PropertyTable[Int] ) : Dataset[(Long,Int)] = {
     val generator: PropertyGenerator[Int] = InstantiatePropertyGeneratorOperator[Int](node.generator)
     val size : Long = EvalValueOperator(node.size).asInstanceOf[Long]
-    val rnd = RndGenerator (0)
+    val rnd = FetchRndGenerator.execute(node.name);
     SparkRuntime.spark.range (0, size).map (i => Tuple2[Long,Int](i.toLong, generator.run (i, rnd.random (i) ) ) )
   }
 
@@ -45,7 +45,7 @@ object PropertyTableOperator {
   def long(node : PropertyTable[Long] ) : Dataset[(Long,Long)] = {
     val generator: PropertyGenerator[Long] = InstantiatePropertyGeneratorOperator[Long](node.generator)
     val size : Long = EvalValueOperator(node.size).asInstanceOf[Long]
-    val rnd = RndGenerator (0)
+    val rnd = FetchRndGenerator.execute(node.name);
     SparkRuntime.spark.range (0, size).map (i => Tuple2[Long,Long](i.toLong, generator.run (i, rnd.random (i) ) ) )
   }
 
@@ -57,7 +57,7 @@ object PropertyTableOperator {
   def float(node : PropertyTable[Float] ) : Dataset[(Long,Float)] = {
     val generator: PropertyGenerator[Float] = InstantiatePropertyGeneratorOperator[Float](node.generator)
     val size : Long = EvalValueOperator(node.size).asInstanceOf[Long]
-    val rnd = RndGenerator (0)
+    val rnd = FetchRndGenerator.execute(node.name);
     SparkRuntime.spark.range (0, size).map (i => Tuple2[Long,Float](i.toLong, generator.run (i, rnd.random (i) ) ) )
   }
 
@@ -69,7 +69,7 @@ object PropertyTableOperator {
   def double(node : PropertyTable[Double] ) : Dataset[(Long,Double)] = {
     val generator: PropertyGenerator[Double] = InstantiatePropertyGeneratorOperator[Double](node.generator)
     val size : Long = EvalValueOperator(node.size).asInstanceOf[Long]
-    val rnd = RndGenerator (0)
+    val rnd = FetchRndGenerator.execute(node.name);
     SparkRuntime.spark.range (0, size).map (i => Tuple2[Long,Double](i.toLong, generator.run (i, rnd.random (i) ) ) )
   }
 
@@ -81,8 +81,7 @@ object PropertyTableOperator {
   def string(node : PropertyTable[String] ) : Dataset[(Long,String)] = {
     val generator: PropertyGenerator[String] = InstantiatePropertyGeneratorOperator[String](node.generator)
     val size : Long = EvalValueOperator(node.size).asInstanceOf[Long]
-    val rnd = RndGenerator (0)
+    val rnd = FetchRndGenerator.execute(node.name);
     SparkRuntime.spark.range (0, size).map (i => Tuple2[Long,String](i.toLong, generator.run (i, rnd.random (i) ) ) )
   }
-
 }

@@ -13,16 +13,24 @@ import scala.collection.mutable
   */
 object FetchTableOperator {
 
+  // Maps used to store the property tables per type
+  var booleanTables = new mutable.HashMap[String, Dataset[(Long,Boolean)]]
+  var intTables     = new mutable.HashMap[String, Dataset[(Long,Int)]]
+  var longTables    = new mutable.HashMap[String, Dataset[(Long,Long)]]
+  var floatTables   = new mutable.HashMap[String, Dataset[(Long,Float)]]
+  var doubleTables  = new mutable.HashMap[String, Dataset[(Long,Double)]]
+  var stringTables  = new mutable.HashMap[String, Dataset[(Long,String )]]
+
   private object FetchTableVisitor extends TableNonVoidVisitor[Dataset[_]] {
 
     override def visit( node: ExecutionPlan.PropertyTable[_] ): Dataset[_] = {
       node match {
-        case t: ExecutionPlan.PropertyTable[Boolean @unchecked] if typeOf[Boolean] =:= node.tag.tpe  => fetchPropertyTableHelper(SparkRuntime.booleanTables, t, PropertyTableOperator.boolean)
-        case t: ExecutionPlan.PropertyTable[Int     @unchecked] if typeOf[Int] =:= node.tag.tpe => fetchPropertyTableHelper(SparkRuntime.intTables, t, PropertyTableOperator.int)
-        case t: ExecutionPlan.PropertyTable[Long    @unchecked] if typeOf[Long] =:= node.tag.tpe => fetchPropertyTableHelper(SparkRuntime.longTables, t, PropertyTableOperator.long)
-        case t: ExecutionPlan.PropertyTable[Float   @unchecked] if typeOf[Float] =:= node.tag.tpe => fetchPropertyTableHelper(SparkRuntime.floatTables, t, PropertyTableOperator.float)
-        case t: ExecutionPlan.PropertyTable[Double  @unchecked] if typeOf[Double] =:= node.tag.tpe => fetchPropertyTableHelper(SparkRuntime.doubleTables, t, PropertyTableOperator.double)
-        case t: ExecutionPlan.PropertyTable[String  @unchecked] if typeOf[String] =:= node.tag.tpe => fetchPropertyTableHelper(SparkRuntime.stringTables, t, PropertyTableOperator.string)
+        case t: ExecutionPlan.PropertyTable[Boolean @unchecked] if typeOf[Boolean] =:= node.tag.tpe  => fetchPropertyTableHelper(booleanTables, t, PropertyTableOperator.boolean)
+        case t: ExecutionPlan.PropertyTable[Int     @unchecked] if typeOf[Int] =:= node.tag.tpe => fetchPropertyTableHelper(intTables, t, PropertyTableOperator.int)
+        case t: ExecutionPlan.PropertyTable[Long    @unchecked] if typeOf[Long] =:= node.tag.tpe => fetchPropertyTableHelper(longTables, t, PropertyTableOperator.long)
+        case t: ExecutionPlan.PropertyTable[Float   @unchecked] if typeOf[Float] =:= node.tag.tpe => fetchPropertyTableHelper(floatTables, t, PropertyTableOperator.float)
+        case t: ExecutionPlan.PropertyTable[Double  @unchecked] if typeOf[Double] =:= node.tag.tpe => fetchPropertyTableHelper(doubleTables, t, PropertyTableOperator.double)
+        case t: ExecutionPlan.PropertyTable[String  @unchecked] if typeOf[String] =:= node.tag.tpe => fetchPropertyTableHelper(stringTables, t, PropertyTableOperator.string)
       }
     }
 

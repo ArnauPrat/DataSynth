@@ -2,7 +2,7 @@ package org.dama.datasynth.runtime
 
 import org.dama.datasynth.executionplan.ExecutionPlan
 import org.dama.datasynth.executionplan.ExecutionPlan.{PropertyTable, TableSize}
-import org.dama.datasynth.runtime.operators.TableSizeOperator
+import org.dama.datasynth.runtime.operators.{FetchTableOperator, TableSizeOperator}
 import org.junit.runner.RunWith
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
@@ -20,7 +20,7 @@ class SparkRuntimeTest extends FlatSpec with Matchers {
     val size = ExecutionPlan.StaticValue[Long](1000)
     val createPropertyTable = PropertyTable[Boolean]("boolean","property",generator,size)
     SparkRuntime.run(Seq(createPropertyTable))
-    SparkRuntime.booleanTables.get("boolean.property").get.collect.foreach( t => t._2 should be (value.value))
+    FetchTableOperator.booleanTables.get("boolean.property").get.collect.foreach(t => t._2 should be (value.value))
   }
 
   " A float table " should " should contain all 1.0 " in {
@@ -29,7 +29,7 @@ class SparkRuntimeTest extends FlatSpec with Matchers {
     val size = ExecutionPlan.StaticValue[Long](1000)
     val createPropertyTable = PropertyTable[Float]("float","property",generator,size)
     SparkRuntime.run(Seq(createPropertyTable))
-    SparkRuntime.floatTables.get("float.property").get.collect.foreach( t => t._2 should be (value.value))
+    FetchTableOperator.floatTables.get("float.property").get.collect.foreach( t => t._2 should be (value.value))
   }
 
   " A double table " should " should contain all 1.0 " in {
@@ -38,7 +38,7 @@ class SparkRuntimeTest extends FlatSpec with Matchers {
     val size = ExecutionPlan.StaticValue[Long](1000)
     val createPropertyTable = PropertyTable[Double]("double","property",generator,size)
     SparkRuntime.run(Seq(createPropertyTable))
-    SparkRuntime.doubleTables.get("double.property").get.collect.foreach( t => t._2 should be (value.value))
+    FetchTableOperator.doubleTables.get("double.property").get.collect.foreach( t => t._2 should be (value.value))
   }
 
   " A long table " should " should contain all 1s " in {
@@ -47,7 +47,7 @@ class SparkRuntimeTest extends FlatSpec with Matchers {
     val size = ExecutionPlan.StaticValue[Long](1000)
     val createPropertyTable = PropertyTable[Long]("long","property",generator,size)
     SparkRuntime.run(Seq(createPropertyTable))
-    SparkRuntime.longTables.get("long.property").get.collect.foreach( t => t._2 should be (num.value))
+    FetchTableOperator.longTables.get("long.property").get.collect.foreach( t => t._2 should be (num.value))
   }
 
   " An int table " should " should contain all 1s " in {
@@ -56,8 +56,7 @@ class SparkRuntimeTest extends FlatSpec with Matchers {
     val size = ExecutionPlan.StaticValue[Long](1000)
     val createPropertyTable = PropertyTable[Int]("int","property",generator,size)
     SparkRuntime.run(Seq(createPropertyTable))
-    SparkRuntime.intTables.get("int.property").get.collect.foreach( t => t._2 should be (num.value))
+    FetchTableOperator.intTables.get("int.property").get.collect.foreach( t => t._2 should be (num.value))
   }
-
 
 }
