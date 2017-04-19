@@ -1,4 +1,4 @@
-package org.dama.datasynth.runtime.utils
+package org.dama.datasynth.runtime.spark.utils
 
 import scala.util.hashing.MurmurHash3
 

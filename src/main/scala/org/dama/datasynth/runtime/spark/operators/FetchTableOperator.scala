@@ -1,9 +1,9 @@
-package org.dama.datasynth.runtime.operators
+package org.dama.datasynth.runtime.spark.operators
 
 import org.apache.spark.sql.Dataset
 import org.dama.datasynth.executionplan.ExecutionPlan.Table
 import org.dama.datasynth.executionplan.{ExecutionPlan, ExecutionPlanNonVoidVisitor, ExecutionPlanVoidVisitor, TableNonVoidVisitor}
-import org.dama.datasynth.runtime.SparkRuntime
+import org.dama.datasynth.runtime.spark.SparkRuntime
 
 import scala.reflect.runtime.universe.{TypeTag, typeOf}
 import scala.collection.mutable

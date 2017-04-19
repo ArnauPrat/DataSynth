@@ -1,7 +1,7 @@
-package org.dama.datasynth.runtime.operators
+package org.dama.datasynth.runtime.spark.operators
 
-import org.dama.datasynth.runtime.SparkRuntime
-import org.dama.datasynth.runtime.utils.RndGenerator
+import org.dama.datasynth.runtime.spark.SparkRuntime
+import org.dama.datasynth.runtime.spark.utils.RndGenerator
 
 import scala.collection.mutable
 

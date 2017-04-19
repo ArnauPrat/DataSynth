@@ -1,11 +1,11 @@
-package org.dama.datasynth.runtime
+package org.dama.datasynth.runtime.spark
 
 import org.dama.datasynth.executionplan.ExecutionPlan
-import org.dama.datasynth.executionplan.ExecutionPlan.{PropertyTable, TableSize}
-import org.dama.datasynth.runtime.operators.{FetchTableOperator, TableSizeOperator}
+import org.dama.datasynth.executionplan.ExecutionPlan.PropertyTable
+import org.dama.datasynth.runtime.spark.operators.FetchTableOperator
 import org.junit.runner.RunWith
-import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.{FlatSpec, Matchers}
 
 /**
   * Created by aprat on 11/04/17.

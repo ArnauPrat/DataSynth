@@ -1,4 +1,4 @@
-package org.dama.datasynth.runtime.operators
+package org.dama.datasynth.runtime.spark.operators
 
 import org.dama.datasynth.executionplan.ExecutionPlan
 import org.dama.datasynth.executionplan.ExecutionPlan.{PropertyTable, StaticValue, TableSize}

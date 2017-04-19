@@ -1,8 +1,8 @@
-package org.dama.datasynth.runtime.operators
+package org.dama.datasynth.runtime.spark.operators
 
 import org.apache.spark.sql.Dataset
 import org.dama.datasynth.executionplan.ExecutionPlan.TableSize
-import org.dama.datasynth.runtime.SparkRuntime
+import org.dama.datasynth.runtime.spark.SparkRuntime
 
 /**
   * Created by aprat on 9/04/17.

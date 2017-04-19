@@ -1,8 +1,8 @@
-package org.dama.datasynth.runtime
+package org.dama.datasynth.runtime.spark
 
 import org.apache.spark.sql.{Dataset, SparkSession}
-import org.dama.datasynth.runtime.operators.{FetchTableOperator, PropertyTableOperator}
-import org.dama.datasynth.executionplan.{ExecutionPlan, ExecutionPlanVoidVisitor}
+import org.dama.datasynth.executionplan.ExecutionPlan
+import org.dama.datasynth.runtime.spark.operators.FetchTableOperator
 
 import scala.collection.mutable
 

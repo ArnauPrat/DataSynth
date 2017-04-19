@@ -1,7 +1,7 @@
-package org.dama.datasynth.runtime.operators
+package org.dama.datasynth.runtime.spark.operators
 
 import org.dama.datasynth.executionplan.ExecutionPlan.PropertyGenerator
-import org.dama.datasynth.runtime.utils._
+import org.dama.datasynth.runtime.spark.utils._
 import org.dama.datasynth._
 
 /**

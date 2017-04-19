@@ -1,10 +1,10 @@
-package org.dama.datasynth.runtime.operators
+package org.dama.datasynth.runtime.spark.operators
 
 import org.apache.spark.sql.{Dataset, Encoder, SparkSession}
 import org.dama.datasynth.common.PropertyGenerator
 import org.dama.datasynth.executionplan.ExecutionPlan.PropertyTable
-import org.dama.datasynth.runtime.SparkRuntime
-import org.dama.datasynth.runtime.utils.RndGenerator
+import org.dama.datasynth.runtime.spark.SparkRuntime
+import org.dama.datasynth.runtime.spark.utils.RndGenerator
 
 /**
   * Created by aprat on 9/04/17.
