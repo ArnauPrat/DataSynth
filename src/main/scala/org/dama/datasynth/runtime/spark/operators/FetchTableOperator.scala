@@ -21,6 +21,9 @@ object FetchTableOperator {
   var doubleTables  = new mutable.HashMap[String, Dataset[(Long,Double)]]
   var stringTables  = new mutable.HashMap[String, Dataset[(Long,String )]]
 
+  // Map used to store the edge tables
+  var edgeTables = new mutable.HashMap[String,Dataset[(Long,Long)]]
+
   private object FetchTableVisitor extends TableNonVoidVisitor[Dataset[_]] {
 
     override def visit( node: ExecutionPlan.PropertyTable[_] ): Dataset[_] = {

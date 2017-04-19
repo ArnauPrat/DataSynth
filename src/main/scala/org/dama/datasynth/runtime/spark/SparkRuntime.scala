@@ -18,11 +18,6 @@ object SparkRuntime {
     .config("spark.some.config.option", "some-value")
     .getOrCreate()
 
-
-
-  // Map used to store the edge tables
-  var edgeTables = new mutable.HashMap[String,Dataset[(Long,Long)]]
-
   def run( executionPlan : Seq[ExecutionPlan.Table] ) = {
     executionPlan.foreach(x => FetchTableOperator.apply(x).collect())
   }
