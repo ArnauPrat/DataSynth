@@ -39,7 +39,7 @@ class ExecutionPlanPrinter extends ExecutionPlanVoidVisitor {
     numIndents+=1
     printstring(node.toString)
     node.initParameters.foreach( p => p.accept(this))
-    node.dependentGenerators.foreach( g => g.accept(this))
+    node.dependentPropertyTables.foreach( g => g.accept(this))
     numIndents-=1
   }
 

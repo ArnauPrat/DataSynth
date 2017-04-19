@@ -13,7 +13,7 @@ class ExecutionPlanTest extends FlatSpec with Matchers{
 
   /** Generator tests **/
   "A PropertyGenerator toString" should "output like [PropertyGenerator,propertyGeneratorName]" in {
-    val generator = new PropertyGenerator[Long]("path.to.class", List[Value[_]](), List[PropertyGenerator[_]]() )
+    val generator = new PropertyGenerator[Long]("path.to.class", List[Value[_]](), List[PropertyTable[_]]() )
     generator.toString should be ("[PropertyGenerator,path.to.class]")
   }
 

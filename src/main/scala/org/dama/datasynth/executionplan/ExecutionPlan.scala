@@ -58,10 +58,11 @@ object ExecutionPlan {
     * Case class representing a property generator
     * @param className The name of the generator
     * @param initParameters The sequence of init parameters of the generator
+    * @param dependentPropertyTables The property tables this generator depends on
     */
   case class PropertyGenerator[T]( className : String,
                                 initParameters : Seq[Value[_]],
-                                dependentGenerators : Seq[PropertyGenerator[_]]) extends ExecutionPlanNode {
+                                dependentPropertyTables : Seq[PropertyTable[_]]) extends ExecutionPlanNode {
 
     override def toString: String = s"[PropertyGenerator,$className]"
 
