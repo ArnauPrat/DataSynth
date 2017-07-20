@@ -1,6 +1,7 @@
 package org.dama.datasynth
 
 import org.apache.spark.sql.SparkSession
+import org.dama.datasynth.common.utils.FileUtils.File
 import org.dama.datasynth.executionplan.ExecutionPlan
 import org.dama.datasynth.executionplan.ExecutionPlan.{EdgeTable, PropertyTable, Table}
 import org.dama.datasynth.lang.ReadExecutionPlan
@@ -16,7 +17,11 @@ object DataSynth {
 
   def main( args : Array[String] ) {
     val dataSynthConfig = DataSynthConfig(args.toList)
-    val json : String = Source.fromFile(dataSynthConfig.schemaFile).getLines.mkString
+    val json : String = File(dataSynthConfig.schemaFile)
+                        .open()
+                        .toList
+                        .mkString(" ")
+
     val schema:Schema = ReadExecutionPlan.loadSchema(json)
     val executionPlan:Seq[Table] = ReadExecutionPlan.createExecutionPlan(schema)
 

@@ -17,7 +17,7 @@ import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers, Suite}
 @RunWith(classOf[JUnitRunner])
 class SparkRuntimeTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
-  val config = DataSynthConfig().setOutputDir("/tmp/datasynth")
+  val config = DataSynthConfig().setOutputDir("file:///tmp/datasynth")
 
   " A boolean table " should " contain all true " in {
     SparkSession.builder().master("local[*]").getOrCreate()
