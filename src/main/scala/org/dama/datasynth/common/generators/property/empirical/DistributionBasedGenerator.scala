@@ -1,6 +1,9 @@
 package org.dama.datasynth.common.generators.property.empirical
 
+import java.io.{BufferedReader, InputStreamReader}
+
 import org.dama.datasynth.common.generators.property.PropertyGenerator
+import org.dama.datasynth.common.utils.FileUtils.File
 import org.dama.datasynth.runtime.spark.utils.RndGenerator
 
 import scala.io.Source
@@ -12,10 +15,10 @@ import scala.io.Source
   * where probability is the marginal probability of observing the given value
   * Probabilities of the second column must add 1 or be very close.
   */
-class DistributionBasedGenerator[T]( parser : (String) => T, fileName : String, separator : String)  extends PropertyGenerator[T] {
+class DistributionBasedGenerator[T](parser: (String) => T, file : File, separator: String)
+  extends PropertyGenerator[T] {
 
-  private val inputFileLines : List[String] = Source.fromFile(fileName).
-    getLines().toList
+  private val inputFileLines : List[String] = file.open().toList
 
   private val values : List[(T,Double)]  = inputFileLines.map( line => line.split(separator))
     .map( { case Array(value,prob) => (parser(value),prob.toDouble)})

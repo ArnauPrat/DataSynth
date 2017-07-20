@@ -10,7 +10,7 @@
           "generator": {
           "name":"org.dama.datasynth.common.generators.property.empirical.IntGenerator",
           "dependencies":[],
-          "initParameters" : ["src/main/resources/distributions/intDistribution.txt:String"," :String"]}
+          "initParameters" : ["file://./src/main/resources/distributions/intDistribution.txt:File"," :String"]}
         },
         {
           "name": "attribute2",
@@ -18,7 +18,7 @@
           "generator": {
           "name":"org.dama.datasynth.common.generators.property.empirical.IntGenerator",
           "dependencies":[],
-          "initParameters" : ["src/main/resources/distributions/intDistribution.txt:String"," :String"]}
+          "initParameters" : ["file://./src/main/resources/distributions/intDistribution.txt:File"," :String"]}
         }
       ]
     }
@@ -30,7 +30,7 @@
       "target" : "entity1",
       "structure" : {
         "name" : "org.dama.datasynth.common.generators.structure.BTERGenerator",
-        "initParameters" : ["file://./src/main/resources/degrees/dblp:String","file://./src/main/resources/ccs/dblp:String"]
+        "initParameters" : ["file://./src/main/resources/degrees/dblp:File","file://./src/main/resources/ccs/dblp:File"]
       }
     }
   ]

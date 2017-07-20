@@ -39,6 +39,17 @@ object ExecutionPlan {
     override def accept[T](visitor: ExecutionPlanNonVoidVisitor[T]): T = visitor.visit(this)
   }
 
+  /** Represents an input file **/
+  case class File( filename : String )
+    extends Value[String]() {
+
+    override def toString() : String = s"[File,${filename}]"
+
+    override def accept(visitor: ExecutionPlanVoidVisitor) = visitor.visit(this)
+
+    override def accept[T](visitor: ExecutionPlanNonVoidVisitor[T]): T = visitor.visit(this)
+  }
+
   /** Produces a Table **/
   abstract class Table( val name : String ) extends ExecutionPlanNode
 
@@ -135,6 +146,7 @@ object ExecutionPlan {
 
     override def accept[T](visitor: ExecutionPlanNonVoidVisitor[T]): T = visitor.visit(this)
   }
+
 
   /**
     * Represents a match operation between a property table and a graph

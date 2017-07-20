@@ -1,7 +1,7 @@
 package org.dama.datasynth.runtime.spark.operators
 
-import org.apache.spark.sql.SparkSession
-import org.dama.datasynth.executionplan.ExecutionPlan.{StaticValue, TableSize, Value}
+import org.dama.datasynth.common.utils.FileUtils
+import org.dama.datasynth.executionplan.ExecutionPlan._
 import org.dama.datasynth.runtime.spark.SparkRuntime
 
 /**
@@ -19,8 +19,9 @@ class EvalValueOperator {
   def apply(  node : Value[_]) : Any = {
 
     node match {
-      case v : StaticValue[_] => v.value
-      case v : TableSize => SparkRuntime.tableSizeOperator(v)
+      case value : File => FileUtils.File(value.filename)
+      case value : StaticValue[_] => value.value
+      case value : TableSize => SparkRuntime.tableSizeOperator(value)
     }
   }
 }

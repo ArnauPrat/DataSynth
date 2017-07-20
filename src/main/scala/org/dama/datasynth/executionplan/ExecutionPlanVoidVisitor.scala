@@ -19,6 +19,7 @@ abstract class ExecutionPlanVoidVisitor {
   def visit( node : PropertyGenerator[_] ) //Generator
   def visit( node : StructureGenerator ) //Generator
   def visit( node : StaticValue[_] ) //Value
+  def visit( node : File) // File
   def visit( node : TableSize) //Table
 }
 
@@ -28,6 +29,7 @@ abstract class TableVoidVisitor extends ExecutionPlanVoidVisitor{
   def visit( node : StructureGenerator )  = throw new RuntimeException(msg);//Generator
   def visit( node : StaticValue[_] )  = throw new RuntimeException(msg);//Value
   def visit( node : TableSize)  = throw new RuntimeException(msg);//Table
+  def visit( node : File)  = throw new RuntimeException(msg);//Table
 }
 
 abstract class PropertyGeneratorVoidVisitor extends ExecutionPlanVoidVisitor {
@@ -38,6 +40,7 @@ abstract class PropertyGeneratorVoidVisitor extends ExecutionPlanVoidVisitor {
   def visit( node : StructureGenerator )  = throw new RuntimeException(msg);//Generator
   def visit( node : StaticValue[_] )  = throw new RuntimeException(msg);//Value
   def visit( node : TableSize)  = throw new RuntimeException(msg);//Table
+  def visit( node : File)  = throw new RuntimeException(msg);//Table
 }
 
 abstract class GraphGeneratorVoidVisitor  extends ExecutionPlanVoidVisitor {
@@ -48,6 +51,7 @@ abstract class GraphGeneratorVoidVisitor  extends ExecutionPlanVoidVisitor {
   def visit( node : PropertyGenerator[_] )  = throw new RuntimeException(msg);//Generator
   def visit( node : StaticValue[_] )  = throw new RuntimeException(msg);//Value
   def visit( node : TableSize)  = throw new RuntimeException(msg);//Table
+  def visit( node : File)  = throw new RuntimeException(msg);//Table
 }
 
 abstract class ValueVoidVisitor  extends ExecutionPlanVoidVisitor {

@@ -82,4 +82,8 @@ class InjectRuntimeGenerators( classes : Map[String, String]) extends ExecutionP
   override def visit(node: ExecutionPlan.StructureGenerator): PropertyTable[_]= {
     throw new RuntimeException("Ill-formed execution plan visitor")
   }
+
+  override def visit(node: ExecutionPlan.File): PropertyTable[_] = {
+    throw new RuntimeException("Ill-formed execution plan visitor")
+  }
 }

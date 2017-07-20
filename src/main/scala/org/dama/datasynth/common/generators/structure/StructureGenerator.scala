@@ -15,9 +15,5 @@ object StructureGenerator {
 }
 
 abstract class StructureGenerator {
-
-  def initialize( parameters : Any* )
-
   def run( num : Long, hdfsConf : Configuration, path : String )
-
 }

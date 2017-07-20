@@ -1,12 +1,9 @@
 package org.dama.datasynth.runtime.spark.passes
 
-import java.io.{File, PrintWriter}
-
 import org.dama.datasynth.DataSynthConfig
-import org.dama.datasynth.executionplan.ExecutionPlan.{PropertyGenerator, PropertyTable, StaticValue, Value}
+import org.dama.datasynth.executionplan.ExecutionPlan._
 import org.dama.datasynth.executionplan.{ExecutionPlan, ExecutionPlanNonVoidVisitor, ExecutionPlanVoidVisitor}
 import org.dama.datasynth.runtime.spark.{RuntimeClass, RuntimeClasses}
-import org.dama.datasynth.runtime.spark.operators.{EvalValueOperator, FetchRndGeneratorOperator}
 
 import scala.tools.nsc.io.{JManifest, Jar, JarWriter}
 import scala.tools.nsc.{GenericRunnerSettings, Global, Settings}
@@ -50,7 +47,7 @@ class RuntimePropertyGeneratorBuilder(config : DataSynthConfig) extends Executio
       {
         case (className,classCode) => {
           val fileName : String = s"${config.driverWorkspaceDir}/$className.scala"
-          val writer = new PrintWriter(new java.io.File(fileName))
+          val writer = new java.io.PrintWriter(new java.io.File(fileName))
           writer.write(classCode)
           writer.close()
           fileName
@@ -100,6 +97,7 @@ class RuntimePropertyGeneratorBuilder(config : DataSynthConfig) extends Executio
       " "
     } else {
       propertyGenerator.initParameters.map({
+        case parameter: File => s"""org.dama.datasynth.common.utils.FileUtils.File(\"${parameter.filename}\")"""
         case parameter: StaticValue[String@unchecked] if parameter.tag.tpe =:= typeOf[String] => s"""\"${parameter.value.toString}\""""
         case parameter: StaticValue[Float@unchecked] if parameter.tag.tpe =:= typeOf[Float] => s"${parameter.value.toString}f"
         case parameter: StaticValue[_] => s"${parameter.value.toString}"
@@ -152,5 +150,9 @@ class RuntimePropertyGeneratorBuilder(config : DataSynthConfig) extends Executio
 
   override def visit(node: ExecutionPlan.Match): RuntimeClasses =  {
     new RuntimeClasses()
+  }
+
+  override def visit(node: File): RuntimeClasses = {
+    throw new RuntimeException("No code should be generated for File")
   }
 }

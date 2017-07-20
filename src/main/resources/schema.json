@@ -1,0 +1,29 @@
+{
+  "nodeTypes" : [
+    {
+      "name" : "person",
+      "instances" : 1000000,
+      "properties" : [
+        {
+          "name": "attribute1",
+          "dataType": "Long",
+          "generator": {
+            "name":"org.dama.datasynth.common.generators.property.empirical.IntGenerator",
+            "dependencies":[],
+            "initParameters" : ["hdfs:///data/distributions/intDistribution.txt:File"," :String"]}
+        }
+      ]
+    }
+  ],
+  "edgeTypes" : [
+    {
+      "name" : "knows",
+      "source" : "person",
+      "target" : "person",
+      "structure" : {
+        "name" : "org.dama.datasynth.common.generators.structure.BTERGenerator",
+        "initParameters" : ["hdfs:///data/degrees/friendster:File","hdfs:///data/ccs/friendster:File"]
+      }
+    }
+  ]
+}

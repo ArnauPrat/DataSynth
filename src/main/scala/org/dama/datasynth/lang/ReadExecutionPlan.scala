@@ -2,8 +2,8 @@ package org.dama.datasynth.lang
 
 import net.liftweb.json._
 import org.dama.datasynth.LoadPropertyTables
-import org.dama.datasynth.executionplan.ExecutionPlan.{ExecutionPlanNode, _}
-import org.dama.datasynth.schema.{Schema}
+import org.dama.datasynth.executionplan.ExecutionPlan._
+import org.dama.datasynth.schema.Schema
 
 import scala.reflect.runtime.universe._
 import scala.collection.mutable
@@ -61,12 +61,11 @@ object ReadExecutionPlan {
         case "double" =>  StaticValue[Double](value.toDouble)
         case "long" =>  StaticValue[Long](value.toLong)
         case "float" =>  StaticValue[Float](value.toFloat)
+        case "file" => File(value)
       }
-    })
-
+    }
+    )
   }
-
-
 
 }
 

@@ -9,7 +9,7 @@ import org.junit.runner.RunWith
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
 
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 /**
   * Created by aprat on 17/07/17.
@@ -31,6 +31,10 @@ class DataSynthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     val result = Try(DataSynth.main(List("--output-dir", dataFolder.getAbsolutePath,
       "--driver-workspace-dir", workspaceFolder.getAbsolutePath,
       "--schema-file", "src/test/resources/test.json").toArray))
-    result.isSuccess should be(true)
+    FileUtils.deleteDirectory(testFolder)
+    result match {
+      case Success(_) => Unit
+      case Failure(error) => throw error.getCause()
+    }
   }
 }

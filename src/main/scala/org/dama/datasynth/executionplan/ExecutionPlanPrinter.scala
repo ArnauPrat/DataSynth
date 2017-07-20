@@ -80,4 +80,10 @@ class ExecutionPlanPrinter extends ExecutionPlanVoidVisitor {
     node.edgeTable.accept(this)
     numIndents-=1
   }
+
+  override def visit(node: File): Unit = {
+    numIndents+=1
+    printstring(node.toString)
+    numIndents-=1
+  }
 }
