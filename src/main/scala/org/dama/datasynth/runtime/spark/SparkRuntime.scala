@@ -102,7 +102,7 @@ object SparkRuntime{
     val hdfsMaster = sparkSession.sparkContext.hadoopConfiguration.get("fs.default.name")
     val prefix = config.outputDir match {
       case path : String if FileUtils.isHDFS(path) => hdfsMaster +"/"+FileUtils.removePrefix(path)
-      case path : String if FileUtils.isLocal(path) => path
+      case path : String if FileUtils.isLocal(path) => FileUtils.removePrefix(path)
     }
     modifiedExecutionPlan.foreach(table =>
       fetchTableOperator(table).write.csv(prefix+"/"+table.name)

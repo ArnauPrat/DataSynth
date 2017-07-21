@@ -15,8 +15,10 @@ import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 class BTERGeneratorTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   "BTERGenerator " should "not crash and produce a graph in /tmp/bterEdges" in {
-    val bterGenerator = new BTERGenerator(utils.FileUtils.File("file://./src/main/resources/degrees/dblp"),
-                             utils.FileUtils.File("file://./src/main/resources/ccs/dblp"));
+
+    val currentDirectory = new java.io.File(".").getCanonicalPath
+    val bterGenerator = new BTERGenerator(utils.FileUtils.File("file://"+currentDirectory+"/src/main/resources/degrees/dblp"),
+                             utils.FileUtils.File("file://"+currentDirectory+"/src/main/resources/ccs/dblp"));
     bterGenerator.run(1000000, new Configuration(), "hdfs:///tmp/bterEdges")
     val fileSystem = FileSystem.get(new Configuration())
     fileSystem.exists(new Path("/tmp/bterEdges")) should be (true)
