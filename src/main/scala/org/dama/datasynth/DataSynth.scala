@@ -17,6 +17,7 @@ object DataSynth {
 
   def main( args : Array[String] ) {
     val dataSynthConfig = DataSynthConfig(args.toList)
+    DataSynthConfig.validateConfig(dataSynthConfig)
     val json : String = File(dataSynthConfig.schemaFile)
                         .open()
                         .toList

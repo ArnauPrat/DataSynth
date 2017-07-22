@@ -14,6 +14,7 @@ object FileUtils {
 
   val hdfsRegex : Regex = "hdfs://(.*)".r
   val fileRegex : Regex = "file://(.*)".r
+  val validRegex : Regex = "(file://|hdfs://)(/.*)".r
 
   def removePrefix( filename : String ) : String = {
     filename match {
@@ -34,6 +35,17 @@ object FileUtils {
     filename match {
       case fileRegex(path) => true
       case _ => false
+    }
+  }
+
+  def validateUri( filename : String ) = {
+    filename match {
+      case validRegex(_,filename) => Unit
+      case _ => {
+        throw new RuntimeException(s"Invalid URI: ${filename}. URIs must be " +
+                                     s"prefixed with either file:// " +
+                                     s"or hdfs:// and be an absolute path")
+      }
     }
   }
 

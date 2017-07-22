@@ -47,10 +47,20 @@ object DataSynthConfig {
       case Nil => currentConfig
     }
   }
+
+  def validateConfig( config : DataSynthConfig ) = {
+    if(config.outputDir.equals("") ){
+      throw new RuntimeException(s"Output dir not specified. Use --output-dir <path> option")
+    }
+
+    if(config.schemaFile.equals("") ){
+      throw new RuntimeException(s"Schema file not specified. Use --schema-file <path> option")
+    }
+  }
 }
 
-class DataSynthConfig ( val outputDir : String = "file://./datasynth",
-                        val schemaFile : String = "file://./schema.json",
+class DataSynthConfig ( val outputDir : String = "",
+                        val schemaFile : String = "",
                         val masterWorkspaceDir : String = "file:///tmp",
                         val datasynthWorkspaceDir : String = "file:///tmp")
 {

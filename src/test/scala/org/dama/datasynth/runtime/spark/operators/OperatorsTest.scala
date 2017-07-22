@@ -15,7 +15,9 @@ import org.scalatest.{FlatSpec, Matchers}
 @RunWith(classOf[JUnitRunner])
 class OperatorsTest extends FlatSpec with Matchers {
 
-  val config = DataSynthConfig().setOutputDir("/tmp/datasynth")
+  val config = DataSynthConfig().setOutputDir("file:///tmp/datasynth")
+                                .schemaFile("file:///tmp/fake.json")
+  DataSynthConfig.validateConfig(config)
 
   " An TableSizeOperator on a table of size 1000" should " should return 1000 " in {
     SparkSession.builder().master("local[*]").getOrCreate()
@@ -41,8 +43,8 @@ class OperatorsTest extends FlatSpec with Matchers {
 
   " An InstantiateGraphGeneratorOperator" should "return an instance of a property generator " in {
     SparkSession.builder().master("local[*]").getOrCreate()
-    val file1 = ExecutionPlan.File("path/to/file")
-    val file2 = ExecutionPlan.File("path/to/file")
+    val file1 = ExecutionPlan.File("file:///path/to/file")
+    val file2 = ExecutionPlan.File("file:///path/to/file")
     val structureGeneratorNode = ExecutionPlan.StructureGenerator("org.dama.datasynth.common.generators.structure.BTERGenerator",Seq(file1, file2))
     SparkRuntime.start(config)
     val generator = SparkRuntime.instantiateStructureGeneratorOperator(structureGeneratorNode)
@@ -61,8 +63,9 @@ class OperatorsTest extends FlatSpec with Matchers {
   }
   "A FetchTableOperator2" should "return a Dataset when fetching a table (either property or edge)" in {
     SparkSession.builder().master("local[*]").getOrCreate()
-    val file1 = ExecutionPlan.File("file://./src/main/resources/degrees/dblp")
-    val file2 = ExecutionPlan.File("file://./src/main/resources/ccs/dblp")
+    val currentDirectory = new java.io.File(".").getCanonicalPath
+    val file1 = ExecutionPlan.File("file://"+currentDirectory+"/src/main/resources/degrees/dblp")
+    val file2 = ExecutionPlan.File("file://"+currentDirectory+"/src/main/resources/ccs/dblp")
     val structureGenerator = ExecutionPlan.StructureGenerator("org.dama.datasynth.common.generators.structure.BTERGenerator",Seq(file1, file2))
     val size = ExecutionPlan.StaticValue[Long](1000)
     val createEdgeTable = EdgeTable("edges",structureGenerator,size)
