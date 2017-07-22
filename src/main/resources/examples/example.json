@@ -1,0 +1,29 @@
+{
+  "nodeTypes" : [
+    {
+      "name" : "person",
+      "instances" : 1000000,
+      "properties" : [
+        {
+          "name": "attribute1",
+          "dataType": "Int",
+          "generator": {
+            "name":"org.dama.datasynth.common.generators.property.empirical.IntGenerator",
+            "dependencies":[],
+            "initParameters" : ["file://./src/main/resources/distributions/intDistribution.txt:File"," :String"]}
+        }
+      ]
+    }
+  ],
+  "edgeTypes" : [
+    {
+      "name" : "knows",
+      "source" : "person",
+      "target" : "person",
+      "structure" : {
+        "name" : "org.dama.datasynth.common.generators.structure.BTERGenerator",
+        "initParameters" : ["file://./src/main/resources/degrees/dblp:File","file://./src/main/resources/ccs/dblp:File"]
+      }
+    }
+  ]
+}

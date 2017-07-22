@@ -33,8 +33,12 @@ object DataSynthConfig {
         val config = currentConfig.schemaFile(schema)
         nextOption(config, tail)
       }
-      case "--driver-workspace-dir" :: workspace :: tail if !isSwitch(workspace) => {
-        val config = currentConfig.driverWorkspaceDir(workspace)
+      case "--master-workspace-dir" :: workspace :: tail if !isSwitch(workspace) => {
+        val config = currentConfig.masterWorkspaceDir(workspace)
+        nextOption(config, tail)
+      }
+      case "--datasynth-workspace-dir" :: workspace :: tail if !isSwitch(workspace) => {
+        val config = currentConfig.datasynthWorkspaceDir(workspace)
         nextOption(config, tail)
       }
       case option :: tail => {
@@ -43,12 +47,22 @@ object DataSynthConfig {
       case Nil => currentConfig
     }
   }
+
+  def validateConfig( config : DataSynthConfig ) = {
+    if(config.outputDir.equals("") ){
+      throw new RuntimeException(s"Output dir not specified. Use --output-dir <path> option")
+    }
+
+    if(config.schemaFile.equals("") ){
+      throw new RuntimeException(s"Schema file not specified. Use --schema-file <path> option")
+    }
+  }
 }
 
-class DataSynthConfig (
-                        val outputDir : String = "./datasynth",
-                        val schemaFile : String = "./schema.json",
-                        val driverWorkspaceDir : String = "/tmp")
+class DataSynthConfig ( val outputDir : String = "",
+                        val schemaFile : String = "",
+                        val masterWorkspaceDir : String = "file:///tmp",
+                        val datasynthWorkspaceDir : String = "file:///tmp")
 {
 
   /**
@@ -57,7 +71,10 @@ class DataSynthConfig (
     * @return this
     */
   def setOutputDir(newOutputDir : String ) : DataSynthConfig = {
-    new DataSynthConfig(newOutputDir,schemaFile,driverWorkspaceDir)
+    new DataSynthConfig(newOutputDir,
+                        schemaFile,
+                        masterWorkspaceDir,
+                        datasynthWorkspaceDir)
   }
 
   /**
@@ -66,15 +83,38 @@ class DataSynthConfig (
     * @return this
     */
   def schemaFile(newSchemaFile : String ) : DataSynthConfig = {
-    new DataSynthConfig(outputDir,newSchemaFile,driverWorkspaceDir)
+    new DataSynthConfig(outputDir,
+                        newSchemaFile,
+                        masterWorkspaceDir,
+                        datasynthWorkspaceDir)
   }
 
   /**
-    * Sets the driver workspace dir
+    * Sets the master workspace dir
     * @param newWorkspace The value of the driver workspace dir
     * @return this
     */
-  def driverWorkspaceDir(newWorkspace : String ) : DataSynthConfig = {
-    new DataSynthConfig(outputDir,schemaFile,newWorkspace)
+  def masterWorkspaceDir(newWorkspace: String ) : DataSynthConfig = {
+    if(!common.utils.FileUtils.isLocal(newWorkspace)) {
+      throw new RuntimeException(s"Invalid master workspace directory ${newWorkspace}." +
+                                   s" Master workspace directory must be in local file" +
+                                   s" system and thus prefixed with file://")
+    }
+    new DataSynthConfig(outputDir,
+                        schemaFile,
+                        newWorkspace,
+                        datasynthWorkspaceDir)
+  }
+
+  /**
+    * Sets datasynth's workspace dir
+    * @param newWorkspace The value of the driver workspace dir
+    * @return this
+    */
+  def datasynthWorkspaceDir(newWorkspace: String ) : DataSynthConfig = {
+    new DataSynthConfig(outputDir,
+                        schemaFile,
+                        masterWorkspaceDir,
+                        newWorkspace)
   }
 }

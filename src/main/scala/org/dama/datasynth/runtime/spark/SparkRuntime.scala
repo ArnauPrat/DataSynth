@@ -5,6 +5,7 @@ import java.net.{URL, URLClassLoader}
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.sql.{Dataset, SparkSession}
 import org.dama.datasynth.DataSynthConfig
+import org.dama.datasynth.common.utils.FileUtils
 import org.dama.datasynth.executionplan.ExecutionPlan
 import org.dama.datasynth.runtime.spark.operators._
 import org.dama.datasynth.runtime.spark.passes.{InjectRuntimeGenerators, RuntimePropertyGeneratorBuilder}
@@ -54,26 +55,42 @@ object SparkRuntime{
     val config:DataSynthConfig = getConfig()
     val sparkSession = getSparkSession()
 
+    if(sparkSession.sparkContext.master == "yarn" &&
+       !FileUtils.isHDFS(config.outputDir) ) {
+      throw new RuntimeException(s"Wrong Datasynth output directory: " +
+                                   s"${config.outputDir}. Outpud directory must be prefixed with " +
+                                   s"hdfs:// when executing on yarn")
+
+    }
+
     // Generate temporal jar with runtime generators
     val generatorBuilder = new RuntimePropertyGeneratorBuilder(config)
-    val jarFileName:String = config.driverWorkspaceDir+"/temp.jar"
-    //val classes = generatorBuilder.buildJar(jarFileName, executionPlan)
-
+    val jarFileName:String = config.masterWorkspaceDir+"/temp.jar"
 
     val runtimeClasses : RuntimeClasses = generatorBuilder.codePropertyTableClasses(executionPlan)
     val runtimeCode:Map[String,String] = runtimeClasses.classNameToClassCode
 
-    generatorBuilder.buildJar(jarFileName,runtimeCode)
+    generatorBuilder.buildJar(FileUtils.removePrefix(jarFileName),runtimeCode)
 
 
     // Add jar to classpath
-    val urlCl = new URLClassLoader( Array[URL](new URL("file://"+jarFileName)), getClass.getClassLoader());
+    val urlCl = new URLClassLoader( Array[URL](new URL(jarFileName)), getClass.getClassLoader());
     val fs:FileSystem = FileSystem.get(sparkSession.sparkContext.hadoopConfiguration)
     if(sparkSession.sparkContext.master == "yarn") {
-      fs.copyFromLocalFile(false, true, new Path("file://" + jarFileName), new Path("hdfs://" + jarFileName))
-      sparkSession.sparkContext.addJar("hdfs://"+jarFileName)
+      if(!FileUtils.isHDFS(config.datasynthWorkspaceDir)) {
+        throw new RuntimeException(s"Wrong Datasynth workspace directory: " +
+                                   s"${config.datasynthWorkspaceDir}. DataSynth's workspace directory" +
+                                     s"must be prefixed with hdfs:// when executing on yarn")
+
+      }
+
+      fs.copyFromLocalFile(false,
+                           true,
+                           new Path(jarFileName),
+                           new Path(config.datasynthWorkspaceDir+"/temp.jar"))
+      sparkSession.sparkContext.addJar(config.datasynthWorkspaceDir+"/temp.jar")
     } else {
-      sparkSession.sparkContext.addJar("file://"+jarFileName)
+      sparkSession.sparkContext.addJar(jarFileName)
     }
 
     // Patch execution plan to replace old generators with new existing ones
@@ -82,8 +99,13 @@ object SparkRuntime{
     val modifiedExecutionPlan:Seq[ExecutionPlan.Table] = injectRuntimeGenerators.run(executionPlan)
 
     // Execute execution plan
+    val hdfsMaster = sparkSession.sparkContext.hadoopConfiguration.get("fs.default.name")
+    val prefix = config.outputDir match {
+      case path : String if FileUtils.isHDFS(path) => hdfsMaster +"/"+FileUtils.removePrefix(path)
+      case path : String if FileUtils.isLocal(path) => FileUtils.removePrefix(path)
+    }
     modifiedExecutionPlan.foreach(table =>
-      fetchTableOperator(table).write.csv(config.outputDir+"/"+table.name)
+      fetchTableOperator(table).write.csv(prefix+"/"+table.name)
     )
   }
 

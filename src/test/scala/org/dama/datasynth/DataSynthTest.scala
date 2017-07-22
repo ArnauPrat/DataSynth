@@ -22,19 +22,25 @@ class DataSynthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     SparkSession.builder().master("local[*]").getOrCreate()
 
-    val testFolder = new File("./test")
-    val dataFolder = new File("./test/data")
-    val workspaceFolder = new File("./test/workspace")
+    val currentDirectory = new java.io.File(".").getCanonicalPath
+    val testFolder = new File(currentDirectory+"/test")
+    val dataFolder = new File(currentDirectory+"/test/data")
+    val masterWorkspaceFolder = new File(currentDirectory+"/test/workspace")
+    val datasynthWorkspaceFolder = new File(currentDirectory+"/test/workspace")
     testFolder.mkdir()
     dataFolder.mkdir()
-    workspaceFolder.mkdir()
-    val result = Try(DataSynth.main(List("--output-dir", dataFolder.getAbsolutePath,
-      "--driver-workspace-dir", workspaceFolder.getAbsolutePath,
-      "--schema-file", "src/test/resources/test.json").toArray))
+    masterWorkspaceFolder.mkdir()
+    val result = Try(DataSynth.main(List("--output-dir", "file://"+dataFolder.getAbsolutePath,
+                                         "--master-workspace-dir", "file://"+masterWorkspaceFolder.getAbsolutePath,
+                                         "--datasynth-workspace-dir", "file://"+datasynthWorkspaceFolder.getAbsolutePath,
+                                         "--schema-file", "file://"+currentDirectory+"/src/test/resources/test.json")
+                                    .toArray))
     FileUtils.deleteDirectory(testFolder)
     result match {
       case Success(_) => Unit
-      case Failure(error) => throw error.getCause()
+      case Failure(error) => {
+        throw new RuntimeException(error.getMessage)
+      }
     }
   }
 }

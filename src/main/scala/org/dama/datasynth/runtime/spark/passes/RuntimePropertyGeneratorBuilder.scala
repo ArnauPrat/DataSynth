@@ -1,6 +1,7 @@
 package org.dama.datasynth.runtime.spark.passes
 
 import org.dama.datasynth.DataSynthConfig
+import org.dama.datasynth.common.utils.FileUtils
 import org.dama.datasynth.executionplan.ExecutionPlan._
 import org.dama.datasynth.executionplan.{ExecutionPlan, ExecutionPlanNonVoidVisitor, ExecutionPlanVoidVisitor}
 import org.dama.datasynth.runtime.spark.{RuntimeClass, RuntimeClasses}
@@ -29,10 +30,11 @@ class RuntimePropertyGeneratorBuilder(config : DataSynthConfig) extends Executio
   def buildJar(jarFileName:String, classes:Map[String,String]):Unit={
 
     //Prepare system to be capable of compiling classes
+    val workspace = FileUtils.removePrefix(config.masterWorkspaceDir)
     val settings = new GenericRunnerSettings(println _)
     settings.nc.value = true
     settings.usejavacp.value = true
-    settings.outputDirs.setSingleOutput(s"${config.driverWorkspaceDir}")
+    settings.outputDirs.setSingleOutput(s"${workspace}")
     val currentJarPath : String = getClass()
                                   .getProtectionDomain()
                                   .getCodeSource()
@@ -46,7 +48,7 @@ class RuntimePropertyGeneratorBuilder(config : DataSynthConfig) extends Executio
     val sourceFileNames : List[String] = classes.toList.map(
       {
         case (className,classCode) => {
-          val fileName : String = s"${config.driverWorkspaceDir}/$className.scala"
+          val fileName : String = s"${workspace}/$className.scala"
           val writer = new java.io.PrintWriter(new java.io.File(fileName))
           writer.write(classCode)
           writer.close()
