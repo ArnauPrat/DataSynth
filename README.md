@@ -68,6 +68,20 @@ For now, a Property Generator is a class responsible of generating the values of
 
 The schema also specifies the generation of an edge type with name "knows", which connects paris of persons. The edge is generated with a Structure Generator, which is the responsible of generating the graph connecting the nodes. In this case, we use a BTER graph generator, which takes the degree distribution and the average clustering coefficient per degree as parameters.
 
+## Running on a Cluster
+
+To run DataSynth on your Hadoop/Yarn cluster, run the following command:
+
+```
+$SPARK_HOME/bin/spark-submit -v --master yarn --deploy-mode cluster --class org.dama.datasynth.DataSynth target/datasynth-1.0-SNAPSHOT-jar-with-dependencies.jar --schema-file hdfs://path/to/schema.json  --output-dir file://path/to/output --master-workspace-dir file://path/master/workspace/dir --datasynth-workspace-dir hdfs://path/to/datasynth/dir
+```
+In this case, you need to specify these four options:
+
+* <kbd>--schema-file</kbd> pointing to the file with the schema specification in HDFS file system (hdfs:// prefix)
+* <kbd>--output-dir</kbd> pointing to the folder where the genrated data will be placed, in HDFS file system (hdfs:// prefix)
+* <kbd>--master-workspace-dir</kbd> pointing to the temporary folder the master computing node will use, in the master's node local file system (file:// prefix)
+* <kbd>--datasynth-workspace-dir</kbd> pointing to the temporary folder datasynth will use, in HDFS (hdfs:// prefix)
+
 
 ## Contributing
 
