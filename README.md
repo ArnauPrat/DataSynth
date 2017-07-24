@@ -82,7 +82,6 @@ In this case, you need to specify these four options:
 * <kbd>--master-workspace-dir</kbd> pointing to the temporary folder the master computing node will use, in the master's node local file system (file:// prefix)
 * <kbd>--datasynth-workspace-dir</kbd> pointing to the temporary folder datasynth will use, in HDFS (hdfs:// prefix)
 
-
 ## Contributing
 
 Feel free to contribute to the project by issuing pull requests, suggestions
