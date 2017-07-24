@@ -79,8 +79,9 @@ In this case, you need to specify these four options:
 
 * <kbd>--schema-file</kbd> pointing to the file with the schema specification in HDFS file system (hdfs:// prefix)
 * <kbd>--output-dir</kbd> pointing to the folder where the genrated data will be placed, in HDFS file system (hdfs:// prefix)
-* <kbd>--master-workspace-dir</kbd> pointing to the temporary folder the master computing node will use, in the master's node local file system (file:// prefix)
 * <kbd>--datasynth-workspace-dir</kbd> pointing to the temporary folder datasynth will use, in HDFS (hdfs:// prefix)
+
+Finally, note that all paths to files in the used schema.json file must be expressed and be available in HDFS (hdfs:// prefix)
 
 ## Contributing
 
